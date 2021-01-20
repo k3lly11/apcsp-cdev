@@ -25,17 +25,35 @@ void createStudent(char* fname, char* lname, int age, int id)
   // student to the student array
   //  - the firstName and lastName strings should be dynamically created
   //    based on the size of the fname and lname args
+
+  Student* st = (Student*)malloc(sizeof(Student));
+  char* first = (char*)malloc(100*sizeof(char));
+  char* last = (char*)malloc(100*sizeof(char));
+  strcpy(first, fname);
+  strcpy(last, lname);
+  st->firstName = first;
+  st->lastName = last;
+  st->age = age;
+  st-> id = id;
+  students[numStudents] = st;
+  numStudents++;
 }
 
 
 void deleteStudent(Student* student)
 {
+  free(student);
   // free the memory associated with a student including the strings
 }
 
 
 void deleteStudents()
 {
+  for (int i = 0; i < numStudents; i++) {
+    deleteStudent(students[0]);
+    students[i]=NULL;
+  }
+  numStudents = 0;
   // iterate over the students array deleting every student and setting te pointer
   // values to 0 and adjusting the numStudents to 0
 }
@@ -54,6 +72,7 @@ void saveStudents(int key)
 
 void loadStudents(int key)
 {
+  deleteStudents();
   // load the students from the data file overwriting all exisiting students in memory
 }
 
