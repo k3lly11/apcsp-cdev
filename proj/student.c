@@ -67,13 +67,43 @@ void saveStudents(int key)
   //       tom thumb 15 1234 
   //       james dean 21 2345 
   //       katy jones 18 4532 
-}
 
+  FILE* fp;
+  fp = fopen("studentdata.txt", "w");
+  if (fp) {
+    if (key != 0) {
+      //encrypt
+    } else {
+      for (int i = 0; i < numStudents; i++) {
+        printf("Saving: %s %s %d %ld\n", students[i]->firstName, students[i]->lastName, students[i]->age, students[i]->id);
+        fprintf(fp, "%s %s %d %ld\n", students[i]->firstName, students[i]->lastName, students[i]->age, students[i]->id);
+      }
+    }
+    fclose(fp);
+  }
+}
 
 void loadStudents(int key)
 {
   deleteStudents();
   // load the students from the data file overwriting all exisiting students in memory
+  FILE* fp;
+  fp = fopen("studentdata.txt", "r");
+  if(fp) {
+    if (key != 0) {
+      //decrypt
+    } else {
+      while(1) {
+        char tempf[100]; char templ[100]; int tempa; int tempi;
+        if (fscanf(fp, "%s %s %d %d\n", tempf, templ, &tempa, &tempi) >= 1) {
+	  createStudent(tempf, templ, tempa, tempi);
+        }else {
+	  break;
+	}
+      }
+    }
+  fclose(fp);
+  }
 }
 
 
