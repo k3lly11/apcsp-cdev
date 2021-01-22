@@ -9,7 +9,7 @@
 //   shiftlen - the length of the shifts array
 void encrypt(char str[], int shifts[], int shiftslen);
 void decrypt(char str[], int shifts[], int shiftslen);
-
+char shiftChar(char c, int shift, int direction);
 
 // caesar cipher - calls encrypt/decrypt with one shift
 void caesarEncrypt(char str[], int shift);

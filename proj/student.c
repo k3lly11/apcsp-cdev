@@ -9,7 +9,6 @@
 #include "student.h"
 #include "encrypt.h"
 
-
 const char* STUFILE = "studentdata.txt";
 
 // keeps track of the number of students in the students array
@@ -72,7 +71,26 @@ void saveStudents(int key)
   fp = fopen("studentdata.txt", "w");
   if (fp) {
     if (key != 0) {
-      //encrypt
+      for (int i=0; i<numStudents; i++) {
+	char encryptedf[100] = {0};
+        char encryptedl[100] = {0};
+        char encrypteda[100] = {0};
+        char encryptedi[100] = {0};
+        sprintf(encrypteda, "%d",  students[i]->age);
+        sprintf(encryptedi, "%ld",  students[i]->id);
+        sprintf(encryptedf, "%s", students[i]->firstName);
+        sprintf(encryptedl, "%s", students[i]->lastName);
+	for(int j = 0; j<100; j++) {
+	  if(encryptedf[j] != '\0') {encryptedf[j] = shiftChar(encryptedf[j], key, 1);}
+          if(encryptedl[j] != '\0') {encryptedl[j] = shiftChar(encryptedl[j], key, 1);}
+          if(encrypteda[j] != '\0') {encrypteda[j] = shiftChar(encrypteda[j], key, 1);}
+          if(encryptedi[j] != '\0') {encryptedi[j] = shiftChar(encryptedi[j], key, 1);}
+	  if(encryptedf[j] == '\0' && encryptedl[j] == '\0'  && encrypteda[j] == '\0' && encryptedi[j] == '\0')
+	  {break;}
+	}
+	printf("Saving: %s %s %s %s\n", encryptedf, encryptedl, encrypteda, encryptedi);
+        fprintf(fp, "%s %s %s %s\n", encryptedf, encryptedl, encrypteda, encryptedi);
+      }
     } else {
       for (int i = 0; i < numStudents; i++) {
         printf("Saving: %s %s %d %ld\n", students[i]->firstName, students[i]->lastName, students[i]->age, students[i]->id);
@@ -91,7 +109,25 @@ void loadStudents(int key)
   fp = fopen("studentdata.txt", "r");
   if(fp) {
     if (key != 0) {
-      //decrypt
+      while(1) {
+        char tempf[100] = {0}; char templ[100] = {0}; char tempa[100] = {0}; char tempi[100] = {0};
+        if (fscanf(fp, "%s %s %s %s\n", tempf, templ, tempa, tempi) >= 1) {
+          for(int j = 0; j<100; j++) {
+            if(tempf[j] != '\0') {tempf[j] = shiftChar(tempf[j], key, 0);}
+            if(templ[j] != '\0') {templ[j] = shiftChar(templ[j], key, 0);}
+            if(tempa[j] != '\0') {tempa[j] = shiftChar(tempa[j], key, 0);}
+            if(tempi[j] != '\0') {tempi[j] = shiftChar(tempi[j], key, 0);}
+            if(tempf[j] == '\0' && templ[j] == '\0'  && tempa[j] == '\0' && tempi[j] == '\0')
+            {break;}
+          }
+	  int tempage = atoi(tempa);
+	  int tempid = atoi(tempi);
+          createStudent(tempf, templ, tempage, tempid);
+        }else {
+          break;
+        }
+      }
+
     } else {
       while(1) {
         char tempf[100]; char templ[100]; int tempa; int tempi;
@@ -104,6 +140,7 @@ void loadStudents(int key)
     }
   fclose(fp);
   }
+  printf("loaded %d students\n", numStudents);
 }
 
 
